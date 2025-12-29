@@ -72,7 +72,9 @@ function App() {
     formData.append('file', file);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      // Use relative path for production (same domain as frontend)
+      // For local dev with separate servers, set VITE_API_URL=http://localhost:8000
+      const API_URL = import.meta.env.VITE_API_URL || '';
       const response = await fetch(`${API_URL}/classify/`, {
         method: 'POST',
         body: formData,
