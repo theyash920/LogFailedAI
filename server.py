@@ -1,35 +1,24 @@
 from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 import csv
 import io
-import os
 
 from classify import classify
-
-from fastapi.staticfiles import StaticFiles
-import os
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=[" *"],
 )
 
-# Serve static files from React build
-if os.path.exists("frontend/dist"):
-    app.mount("/assets", StaticFiles(directory="frontend/dist/assets"), name="assets")
-
-@app.get("/")
-def read_root():
-    if os.path.exists("frontend/dist/index.html"):
-        return FileResponse("frontend/dist/index.html")
-    return {"message": "Log Classification API is running. Frontend build not found."}
-
+# API Routes MUST  come BEFORE static file serving
 @app.post("/classify/")
 async def classify_logs(file: UploadFile):
     filename = file.filename.lower()
@@ -37,7 +26,6 @@ async def classify_logs(file: UploadFile):
         raise HTTPException(status_code=400, detail="File must be a CSV, TXT, or LOG file.")
     
     try:
-        # Read uploaded file content
         content = await file.read()
         text_content = content.decode('utf-8')
         
@@ -45,7 +33,6 @@ async def classify_logs(file: UploadFile):
         fieldnames = []
         
         if filename.endswith('.csv'):
-            # Use StringIO to handle CSV data in memory
             csv_file = io.StringIO(text_content)
             reader = csv.DictReader(csv_file)
             
@@ -56,7 +43,6 @@ async def classify_logs(file: UploadFile):
             rows = list(reader)
             logs_to_classify = [(row.get("source", ""), row.get("log_message", "")) for row in rows]
         else:
-            # Handle .txt or .log files line by line
             lines = text_content.splitlines()
             fieldnames = ["source", "log_message"]
             for line in lines:
@@ -67,23 +53,19 @@ async def classify_logs(file: UploadFile):
         if not rows:
             raise HTTPException(status_code=400, detail="File is empty or contains no valid logs.")
 
-        # Perform classification
         labels = classify(logs_to_classify)
         
-        # Add labels to rows
         for row, label in zip(rows, labels):
             row["target_label"] = label
         
         print(f"Processed {filename} - rows count: {len(rows)}")
 
-        # Write to memory buffer
         output = io.StringIO()
         final_fieldnames = fieldnames + ["target_label"]
         writer = csv.DictWriter(output, fieldnames=final_fieldnames)
         writer.writeheader()
         writer.writerows(rows)
         
-        # Reset buffer position
         output.seek(0)
         
         return StreamingResponse(
@@ -98,3 +80,12 @@ async def classify_logs(file: UploadFile):
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         await file.close()
+
+# Serve static files - MUST come AFTER API routes
+dist_path = Path("frontend/dist")
+if dist_path.exists():
+    app.mount("/assets", StaticFiles(directory=str(dist_path / "assets")), name="assets")
+    
+    @app.get("/{full_path:path}")
+    async def serve_react_app(full_path: str):
+        return FileResponse(dist_path / "index.html")
