@@ -14,7 +14,8 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+# dist/  <-- Commented out to allow frontend build
+!frontend/dist/
 downloads/
 eggs/
 .eggs/

@@ -7,6 +7,9 @@ import os
 
 from classify import classify
 
+from fastapi.staticfiles import StaticFiles
+import os
+
 app = FastAPI()
 
 app.add_middleware(
@@ -17,9 +20,15 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+# Serve static files from React build
+if os.path.exists("frontend/dist"):
+    app.mount("/assets", StaticFiles(directory="frontend/dist/assets"), name="assets")
+
 @app.get("/")
 def read_root():
-    return {"message": "Log Classification API is running."}
+    if os.path.exists("frontend/dist/index.html"):
+        return FileResponse("frontend/dist/index.html")
+    return {"message": "Log Classification API is running. Frontend build not found."}
 
 @app.post("/classify/")
 async def classify_logs(file: UploadFile):
