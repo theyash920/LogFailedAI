@@ -17,6 +17,10 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+@app.get("/")
+def read_root():
+    return {"message": "Log Classification API is running."}
+
 @app.post("/classify/")
 async def classify_logs(file: UploadFile):
     filename = file.filename.lower()
