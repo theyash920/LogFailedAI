@@ -273,7 +273,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Sentence Transformers team for the embedding models
+- Sentence Transformers team for the embedding models 
 - FastAPI community for the excellent framework
 - Groq for LLM API access
 
