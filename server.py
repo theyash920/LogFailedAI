@@ -18,6 +18,18 @@ app.add_middleware(
     allow_headers=[" *"],
 )
 
+@app.on_event("startup")
+async def startup_event():
+    """Check if frontend build exists on startup"""
+    dist_path = Path("frontend/dist")
+    if dist_path.exists():
+        print("✓ Frontend build found at frontend/dist")
+        print(f"✓ Serving static files from {dist_path.absolute()}")
+    else:
+        print("⚠ WARNING: frontend/dist directory not found!")
+        print("⚠ Please run: cd frontend && npm run build")
+        print("⚠ Or ensure build command includes frontend build step")
+
 # API Routes MUST  come BEFORE static file serving
 @app.post("/classify/")
 async def classify_logs(file: UploadFile):
