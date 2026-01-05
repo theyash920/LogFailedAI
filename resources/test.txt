@@ -1,0 +1,30 @@
+system,Connection timeout after 30 seconds
+application,User authentication successful for user_id: 12345
+database,Query execution failed: table 'users' not found
+network,Failed to establish SSL connection to remote server
+application,Session expired for user: john.doe@example.com
+system,Memory usage exceeded 90% threshold
+database,Deadlock detected on transaction T-9876
+application,Invalid API key provided in request header
+network,DNS resolution failed for domain: api.example.com
+system,Disk space critically low - 95% utilized on /dev/sda1
+application,Payment processing successful - Order #54321
+database,Connection pool exhausted - max 100 connections reached
+network,Packet loss detected: 15% on interface eth0
+system,CPU temperature warning: 85°C detected
+application,Failed login attempt from IP: 192.168.1.100
+database,Index rebuild completed successfully on table 'orders'
+network,Port 443 blocked by firewall rules
+system,Service restart initiated by watchdog
+application,File upload failed: size exceeds 10MB limit
+database,Backup completed: 2.5GB written to /backup/db_20241231.sql
+network,TCP handshake timeout after 5 retries
+system,Kernel panic - not syncing: VFS: Unable to mount root
+application,Cache cleared successfully - 500MB freed
+database,Replication lag detected: 30 seconds behind master
+network,ARP spoofing attack detected from MAC: aa:bb:cc:dd:ee:ff
+system,Process killed by OOM: nginx (PID: 1234)
+application,New user registration: email verified successfully
+database,Slow query detected: execution time 15.3 seconds
+network,BGP session established with peer 10.0.0.1
+system,Cron job executed successfully: /scripts/backup.sh

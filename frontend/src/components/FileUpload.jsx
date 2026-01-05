@@ -51,10 +51,10 @@ export default function FileUpload({ onUpload, loading }) {
     };
 
     const validateAndSetFile = (file) => {
-        if (file.type === "text/csv" || file.name.endsWith('.csv') || file.name.endsWith('.txt') || file.name.endsWith('.log')) {
+        if (file.type === "text/csv" || file.name.endsWith('.csv')) {
             setFile(file);
         } else {
-            alert("Please upload a valid CSV, TXT, or LOG file.");
+            alert("Please upload a valid CSV file");
         }
     };
 
@@ -89,7 +89,7 @@ export default function FileUpload({ onUpload, loading }) {
                     ref={inputRef}
                     type="file"
                     className="hidden"
-                    accept=".csv,.txt,.log"
+                    accept=".csv"
                     onChange={handleChange}
                 />
 
@@ -117,7 +117,7 @@ export default function FileUpload({ onUpload, loading }) {
                                 <CloudUploadIcon />
                             </div>
                             <p className="text-xl font-semibold text-white mb-2">
-                                Drop your CSV, TXT, or LOG file here
+                                Drop your CSV file here
                             </p>
                             <p className="text-slate-400 mb-4">
                                 or <span className="text-primary hover:text-primary/80 transition-colors">browse</span> to choose a file
@@ -126,7 +126,7 @@ export default function FileUpload({ onUpload, loading }) {
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Supports .csv, .txt, and .log files
+                                Supports .csv files
                             </div>
                         </div>
                     )}
